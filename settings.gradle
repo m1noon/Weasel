@@ -1,0 +1,2 @@
+include ':weasel'
+include ':app'
