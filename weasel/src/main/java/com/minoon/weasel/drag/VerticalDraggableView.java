@@ -324,18 +324,15 @@ public class VerticalDraggableView extends RelativeLayout implements TouchEventH
 
     @Override
     public void scrollViewBy(int dx, int dy) {
-        boolean isChildScroll = false;
         if(mTouchEventTrader.stealTouchEventForChild()) {
             mTouchEventTrader.scrollBy(dx, -dy);
             mContentScrollPosition -= dy;
-            isChildScroll = true;
         } else if(isAtTop()) {
             if(dy > 0) {
                 scrollDragViewTo(getScrollPositionY() + dy);
             } else {
                 mTouchEventTrader.scrollBy(dx, -dy);
                 mContentScrollPosition -= dy;
-                isChildScroll = true;
             }
         } else {
             mContentScrollPosition = 0;

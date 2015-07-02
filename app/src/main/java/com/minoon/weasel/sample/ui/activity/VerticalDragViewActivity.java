@@ -70,8 +70,6 @@ public class VerticalDragViewActivity extends AppCompatActivity {
         Weasel.chase(mDraggableView)
                 .at(Event.START_SCROLL_UP, new State(), 400)
                 .at(Event.START_SCROLL_DOWN, new State().translateY(-300), 400)
-//                .at(Event.FLICK_SCROLL_UP, new State(), 400)
-//                .at(Event.FLICK_SCROL_DOWN, new State().translateY(-300), 400)
                 .start(mToolbar);
     }
 }

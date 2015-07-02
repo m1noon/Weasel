@@ -1,6 +1,7 @@
 package com.minoon.weasel;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -23,6 +24,10 @@ public class Weasel {
 
     public static WeaselBuilder chase(VerticalDraggableView view) {
         return new WeaselBuilder(view);
+    }
+
+    public static RecyclerWeaselBuilder chase(RecyclerView recyclerView) {
+        return new RecyclerWeaselBuilder(recyclerView);
     }
 
     final View mView;
