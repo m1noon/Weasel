@@ -5,11 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.minoon.weasel.drag.VerticalDraggableView;
-import com.minoon.weasel.transformer.Transformer;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by a13587 on 15/06/28.
@@ -18,11 +15,10 @@ public class Weasel {
     private static final String TAG = Weasel.class.getSimpleName();
 
     /* package */ Weasel(@NonNull View view) {
-        mTransformers = new ArrayList<>();
         mView = view;
     }
 
-    public static WeaselBuilder chase(VerticalDraggableView view) {
+    public static WeaselBuilder chase(ScrollableView view) {
         return new WeaselBuilder(view);
     }
 
@@ -32,56 +28,32 @@ public class Weasel {
 
     final View mView;
 
-    private StateHolder mStateHolder;
+    private Map<Event, Animator> mAnimatorMap;
 
-    private float mRatio;
+    private SmoothChaseHelper mSmoothHelper;
 
-    private final List<Transformer> mTransformers;
-
-    private int mOffset;
-
-    /* package */ void setStateHolder(StateHolder stateHolder) {
-        mStateHolder = stateHolder;
+    /* package */ void setSmoothHelper(SmoothChaseHelper helper) {
+        mSmoothHelper = helper;
     }
 
-    /* package */ void setRatio(float ratio) {
-        mRatio = ratio;
-    }
-
-    /* package */ void setOffset(int offset) {
-        mOffset = offset;
-    }
-
-    /* package */ void addTransformer(Transformer transformer) {
-        mTransformers.add(transformer);
+    /* package */ void addEventAnimator(Event event, Animator animator) {
+        if (mAnimatorMap == null) {
+            mAnimatorMap = new HashMap<>();
+        }
+        mAnimatorMap.put(event, animator);
     }
 
     public void chase(int scrollPosition) {
-        if(scrollPosition < mOffset) {
-            return;
-        }
-        scrollPosition -= mOffset;
-
-        State fromState = mStateHolder.getFromState();
-        State toState = mStateHolder.getToState();
-        if(fromState == null || toState == null) {
-            return;
-        }
-        int fromY = fromState.getTranslateY();
-        int toY = toState.getTranslateY();
-        int range = Math.abs(toY - fromY);
-        float currentPosition = scrollPosition * mRatio;
-        float offset = Math.max(0f, Math.min(1f, currentPosition / (float)range));
-        for (Transformer t : mTransformers) {
-            t.transform(mView, offset);
+        if (mSmoothHelper != null) {
+            mSmoothHelper.transform(mView, scrollPosition);
         }
     }
 
     public void event(Event ev, int scrollPosition) {
-        if(scrollPosition < mOffset) {
+        if(mAnimatorMap == null) {
             return;
         }
-        Animator animator = mStateHolder.get(ev);
+        Animator animator = mAnimatorMap.get(ev);
         Log.i(TAG, "onEvent. animator=" + animator + ", ev=" + ev);
         if(animator != null) {
             animator.animate(mView);

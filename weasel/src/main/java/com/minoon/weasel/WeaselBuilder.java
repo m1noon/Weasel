@@ -3,9 +3,7 @@ package com.minoon.weasel;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.minoon.weasel.transformer.AlphaTransformer;
 import com.minoon.weasel.transformer.Transformer;
-import com.minoon.weasel.transformer.TranslationTransformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +24,10 @@ public class WeaselBuilder {
     private final List<Transformer> transformers;
     private final Map<Event, Animator> animators;
 
-    public WeaselBuilder(ScrollableView verticalDraggableView) {
-        this.mScrollableView = verticalDraggableView;
-        this.transformers = new ArrayList<>();
-        this.animators = new HashMap<>();
+    public WeaselBuilder(ScrollableView scrollableView) {
+        mScrollableView = scrollableView;
+        transformers = new ArrayList<>();
+        animators = new HashMap<>();
     }
 
     /**
@@ -101,30 +99,22 @@ public class WeaselBuilder {
         // setup listener and add to ScrollableView.
         Weasel weasel = new Weasel(chaserView);
 
-        weasel.setOffset(offset);
-        weasel.setRatio(ratio);
-
-        // state holder
-        StateHolder stateHolder = new StateHolder();
-        stateHolder.setFromState(fromState);
-        stateHolder.setToState(toState);
+        // event
         for (Event ev : animators.keySet()) {
-            stateHolder.set(ev, animators.get(ev));
-        }
-        weasel.setStateHolder(stateHolder);
-
-        // Basic Transformer
-        if (fromState != null && toState != null) {
-            weasel.addTransformer(new AlphaTransformer(fromState.getAlpha(), toState.getAlpha()));
-            weasel.addTransformer(new TranslationTransformer(fromState, toState));
+            weasel.addEventAnimator(ev, animators.get(ev));
         }
 
+        // smooth
+        SmoothChaseHelper smoothHelper = new SmoothChaseHelper(fromState, toState);
+        smoothHelper.setOffset(offset);
+        smoothHelper.setRatio(ratio);
         // Custom Transformer
         for (Transformer t : transformers) {
             if (t != null) {
-                weasel.addTransformer(t);
+                smoothHelper.addTransformer(t);
             }
         }
+        weasel.setSmoothHelper(smoothHelper);
 
         // add to scrollable view and start to chase.
         mScrollableView.addWeasel(weasel);
