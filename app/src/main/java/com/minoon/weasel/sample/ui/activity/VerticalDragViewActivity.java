@@ -1,5 +1,7 @@
 package com.minoon.weasel.sample.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,11 @@ public class VerticalDragViewActivity extends AppCompatActivity {
     VerticalDraggableView mDraggableView;
     ImageView mBackImage;
     Toolbar mToolbar;
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, VerticalDragViewActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,7 @@ public class VerticalDragViewActivity extends AppCompatActivity {
         Weasel.chase(mDraggableView)
                 .from(new State())
                 .to(new HideAtWindowTopState(mBackImage).alpha(0.4f))
-                .ratio(0.25f)
+                .ratio(0.5f)
                 // do not tracking scroll in first 500 px.
                 .offset(500)
                 // you can implements custom transform.
