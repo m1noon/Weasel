@@ -21,11 +21,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.VerticalDragViewActivity"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity
             android:name=".ui.activity.RecyclerViewSampleActivity"
             android:label="@string/app_name" >
         </activity>

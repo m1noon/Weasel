@@ -40,8 +40,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
      * Listener for drag event.
      */
     public interface DragListener {
-        void onDragged(View dragView, View headerView, int y, int dy);
-
+        void onDragged(CollapsingHeaderLayout view, int y, int dy, float progress);
     }
 
     private static final int INVALID_POINTER = -1;
@@ -81,6 +80,8 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         this(context, attrs, 0);
     }
 
+    public Weasel mWeasel;
+
     public CollapsingHeaderLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -97,7 +98,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        mRecyclerViews = getTopChildViews(mDragView);
+        mRecyclerViews = getRecyclerViews(mDragView);
         if (mRecyclerViews.size() > 0) {
             mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerViews.get(0));
         }
@@ -105,7 +106,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         setupWeasel();
     }
 
-    private List<RecyclerView> getTopChildViews(ViewGroup viewGroup) {
+    private List<RecyclerView> getRecyclerViews(ViewGroup viewGroup) {
 //        Logger.d(TAG, "viewGroup=" + viewGroup);
         List<RecyclerView> views = new ArrayList<>();
         final int childCount = viewGroup.getChildCount();
@@ -116,7 +117,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
             if (child instanceof RecyclerView) {
                 views.add((RecyclerView) child);
             } else if (child instanceof ViewGroup) {
-                List<RecyclerView> childViews = getTopChildViews((ViewGroup) child);
+                List<RecyclerView> childViews = getRecyclerViews((ViewGroup) child);
                 views.addAll(childViews);
             }
         }
@@ -330,7 +331,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         final int dy = oldTop - top;
         // ignore if 'dy == 0' because it is initial layout not by user action.
         if (mDragListener != null && dy != 0) {
-            mDragListener.onDragged(mDragView, mHeaderView, top, dy);
+            mDragListener.onDragged(this, top, dy, 1f - (top / (float)(getBottomBounds() - getTopBounds())));
         }
     }
 
@@ -443,16 +444,21 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         mInterceptHeaderTouchEventForScroll = enable;
     }
 
-    private boolean mSetUpCompleted = false;
-
     private void setupWeasel() {
-        if (!mSetUpCompleted) {
-            mSetUpCompleted = true;
-            Weasel.chase(this)
+        if (mWeasel == null) {
+            mWeasel = Weasel.chase(this)
                     .from(new State())
-                    .to(new HideAtWindowTopState(mHeaderView))
+                    .to(new HideAtWindowTopState(mHeaderView).alpha(0))
                     .ratio(0.6f)
                     .start(mHeaderView);
         }
+    }
+
+    public View getHeaderView() {
+        return mHeaderView;
+    }
+
+    public View getDragView() {
+        return mDragView;
     }
 }

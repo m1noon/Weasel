@@ -44,11 +44,6 @@ public class FirstActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.first_a_btn_sample_vertical_draggable)
-    public void onClickVerticalDraggableSample(View view) {
-        VerticalDragViewActivity.startActivity(this);
-    }
-
     @OnClick(R.id.first_a_btn_sample_recycler_view)
     public void onClickRecyclerViewSample(View view) {
         RecyclerViewSampleActivity.startActivity(this);

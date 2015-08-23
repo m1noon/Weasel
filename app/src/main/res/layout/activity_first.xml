@@ -10,15 +10,6 @@
               android:gravity="center"
               tools:context="com.minoon.weasel.sample.ui.activity.FirstActivity">
 
-
-    <Button
-        android:id="@+id/first_a_btn_sample_vertical_draggable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="@string/btn_sample_vertical_dragable"
-        />
-
     <Button
         android:id="@+id/first_a_btn_sample_recycler_view"
         android:layout_width="match_parent"
