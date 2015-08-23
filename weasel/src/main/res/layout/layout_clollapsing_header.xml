@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+              >
+    <RelativeLayout
+        android:id="@+id/layout_collapsing_header_fl_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <RelativeLayout
+        android:id="@+id/layout_collapsing_header_fl_drag_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</merge>

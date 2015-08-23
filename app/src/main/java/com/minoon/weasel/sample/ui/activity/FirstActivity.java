@@ -53,4 +53,9 @@ public class FirstActivity extends AppCompatActivity {
     public void onClickRecyclerViewSample(View view) {
         RecyclerViewSampleActivity.startActivity(this);
     }
+
+    @OnClick(R.id.first_a_btn_sample_collapsing_header)
+    public void onCliclCollapsingHeaderSample(View view) {
+        CollapsingHeaderActivity.startActivity(this);
+    }
 }
