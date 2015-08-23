@@ -18,7 +18,7 @@ import android.view.ViewConfiguration;
  * Created by a13587 on 15/06/28.
  */
 public class TouchEventHelper {
-    private static final String TAG = TouchEventHelper.class.getSimpleName();
+    private static final String TAG = Logger.createTag(TouchEventHelper.class.getSimpleName());
 
 
     /**

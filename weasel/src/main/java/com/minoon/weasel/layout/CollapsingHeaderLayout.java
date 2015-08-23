@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.minoon.weasel.Weasel;
 import com.minoon.weasel.state.HideAtWindowTopState;
 import com.minoon.weasel.trader.LinearLayoutRecyclerViewTrader;
 import com.minoon.weasel.trader.TouchEventTrader;
+import com.minoon.weasel.util.Logger;
 import com.minoon.weasel.util.ScrollOrientationChangeHelper;
 import com.minoon.weasel.util.TouchEventHelper;
 
@@ -34,7 +34,7 @@ import java.util.List;
 public class CollapsingHeaderLayout extends RelativeLayout implements TouchEventHelper.Callback,
         ScrollableView,
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {
-    private static final String TAG = CollapsingHeaderLayout.class.getSimpleName();
+    private static final String TAG = Logger.createTag(CollapsingHeaderLayout.class.getSimpleName());
 
     /**
      * Listener for drag event.
@@ -106,13 +106,13 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     }
 
     private List<RecyclerView> getTopChildViews(ViewGroup viewGroup) {
-//        Log.d(TAG, "viewGroup=" + viewGroup);
+//        Logger.d(TAG, "viewGroup=" + viewGroup);
         List<RecyclerView> views = new ArrayList<>();
         final int childCount = viewGroup.getChildCount();
-        Log.d(TAG, "childCount = " + childCount);
+        Logger.d(TAG, "childCount = " + childCount);
         for (int i = 0; i < childCount; i++) {
             View child = viewGroup.getChildAt(i);
-            Log.d(TAG, "view=" + child);
+            Logger.d(TAG, "view=" + child);
             if (child instanceof RecyclerView) {
                 views.add((RecyclerView) child);
             } else if (child instanceof ViewGroup) {
@@ -150,7 +150,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.d(TAG, "[onTouchEvent]x=" + getScrollPositionX() + ", y=" + getScrollPositionY() + ", from=" + mDragView.getBottom());
+        Logger.d(TAG, "[onTouchEvent]x=" + getScrollPositionX() + ", y=" + getScrollPositionY() + ", from=" + mDragView.getBottom());
         mTouchEventHelper.onTouchEvent(ev);
         if(ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
             mScroller.abortAnimation();
@@ -219,7 +219,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
             int x = mScroller.getCurrX();
             int y = mScroller.getCurrY();
             final int dy = y - mScrollerOldY;
-            Log.d(TAG, String.format("[computeScroll]posX='%s', posY='%s', toX='%s', toY='%s', dy='%s'", oldX, oldY, x, y, dy));
+            Logger.d(TAG, String.format("[computeScroll]posX='%s', posY='%s', toX='%s', toY='%s', dy='%s'", oldX, oldY, x, y, dy));
             // 縦方向
             scrollViewBy(0, dy);
             mScrollerOldY = y;
@@ -282,14 +282,14 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     public void flickToTop(float velocity) {
         int distance = calculateDistanceByVelocity(velocity);
         int duration = calculeteDurationByVelocity(velocity);
-        Log.d(TAG, String.format("flickToTop. dration='%s'", duration));
+        Logger.d(TAG, String.format("flickToTop. dration='%s'", duration));
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, -distance, duration);
         postInvalidate();
         notifyEvent(Event.FLICK_SCROL_DOWN);
     }
 
     public void flickToBottom(float velocity) {
-        Log.d(TAG, "flickToBottom");
+        Logger.d(TAG, "flickToBottom");
         int distance = calculateDistanceByVelocity(velocity);
         int duration = calculeteDurationByVelocity(velocity);
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, distance, duration);
@@ -309,7 +309,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     }
 
     private int calculateDistanceByVelocity(float velocity) {
-        Log.d(TAG, String.format("velocity='%s'", velocity));
+        Logger.d(TAG, String.format("velocity='%s'", velocity));
         return (int)velocity / 8;
     }
 
@@ -355,7 +355,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     @Override
     public void onViewReleased(float xvel, float yvel) {
-        Log.d(TAG, "onViewReleased.x=" + xvel + ", y=" + yvel);
+        Logger.d(TAG, "onViewReleased.x=" + xvel + ", y=" + yvel);
         float xVelAbs = Math.abs(xvel);
         float yVelAbs = Math.abs(yvel);
         if(xVelAbs > X_MIN_VELOCITY && xVelAbs >= yVelAbs) {

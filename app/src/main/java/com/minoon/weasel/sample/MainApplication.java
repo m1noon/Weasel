@@ -3,6 +3,8 @@ package com.minoon.weasel.sample;
 import android.app.Application;
 import android.util.Log;
 
+import com.minoon.weasel.util.Logger;
+
 /**
  * Created by a13587 on 15/06/27.
  */
@@ -34,5 +36,6 @@ public class MainApplication extends Application {
         // Exception Handler
         mSavedUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(mUncaughtExceptionHandler);
+        Logger.setLoggable(true);
     }
 }

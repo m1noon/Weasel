@@ -2,8 +2,9 @@ package com.minoon.weasel;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+
+import com.minoon.weasel.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  * Created by a13587 on 15/06/28.
  */
 public class Weasel {
-    private static final String TAG = Weasel.class.getSimpleName();
+    private static final String TAG = Logger.createTag(Weasel.class.getSimpleName());
 
     public static WeaselBuilder chase(ScrollableView view) {
         return new WeaselBuilder(view);
@@ -57,7 +58,7 @@ public class Weasel {
             return;
         }
         Animator animator = mAnimatorMap.get(ev);
-        Log.i(TAG, "onEvent. animator=" + animator + ", ev=" + ev);
+        Logger.i(TAG, "onEvent. animator=" + animator + ", ev=" + ev);
         if(animator != null) {
             animator.animate(mView);
         }
