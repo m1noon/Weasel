@@ -20,6 +20,6 @@ import android.support.v7.widget.RecyclerView;
 
     @Override
     protected void addWeaselToScrollView(Weasel weasel) {
-        mRecyclerView.addOnScrollListener(new RecyclerWeaselConnector(weasel));
+        weasel.addChaseView(mRecyclerView);
     }
 }

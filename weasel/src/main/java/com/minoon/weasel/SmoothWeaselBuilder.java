@@ -107,7 +107,7 @@ public abstract class SmoothWeaselBuilder {
      *
      * @param chaserView
      */
-    public void start(@NonNull View chaserView) {
+    public Weasel start(@NonNull View chaserView) {
         // setup listener and add to ScrollableView.
         Weasel weasel = new Weasel(chaserView);
 
@@ -125,5 +125,6 @@ public abstract class SmoothWeaselBuilder {
 
         // add to scrollable view and start to chase.
         addWeaselToScrollView(weasel);
+        return weasel;
     }
 }

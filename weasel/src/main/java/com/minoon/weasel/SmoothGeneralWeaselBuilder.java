@@ -14,6 +14,6 @@ package com.minoon.weasel;
 
     @Override
     protected void addWeaselToScrollView(Weasel weasel) {
-        mScrollableView.addWeasel(weasel);
+        weasel.addChaseView(mScrollableView);
     }
 }

@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * Created by a13587 on 15/06/27.
  */
+@Deprecated
 public class VerticalDraggableView extends RelativeLayout implements TouchEventHelper.Callback,
         ScrollableView,
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {

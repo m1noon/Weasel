@@ -5,6 +5,7 @@ import android.view.View;
 /**
  * Created by a13587 on 15/06/27.
  */
+@Deprecated
 public class BoundaryMakerFactory {
     private static final String TAG = BoundaryMakerFactory.class.getSimpleName();
 

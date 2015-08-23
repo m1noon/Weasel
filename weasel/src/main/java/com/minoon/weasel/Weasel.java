@@ -14,10 +14,6 @@ import java.util.Map;
 public class Weasel {
     private static final String TAG = Weasel.class.getSimpleName();
 
-    /* package */ Weasel(@NonNull View view) {
-        mView = view;
-    }
-
     public static WeaselBuilder chase(ScrollableView view) {
         return new WeaselBuilder(view);
     }
@@ -31,6 +27,13 @@ public class Weasel {
     private Map<Event, Animator> mAnimatorMap;
 
     private SmoothChaseHelper mSmoothHelper;
+
+    private RecyclerWeaselConnector mRecyclerConnector;
+
+    /* package */ Weasel(@NonNull View view) {
+        mView = view;
+        mRecyclerConnector = new RecyclerWeaselConnector(this);
+    }
 
     /* package */ void setSmoothHelper(SmoothChaseHelper helper) {
         mSmoothHelper = helper;
@@ -58,5 +61,13 @@ public class Weasel {
         if(animator != null) {
             animator.animate(mView);
         }
+    }
+
+    public void addChaseView(RecyclerView recyclerView) {
+        recyclerView.addOnScrollListener(mRecyclerConnector);
+    }
+
+    public void addChaseView(ScrollableView scrollableView) {
+        scrollableView.addWeasel(this);
     }
 }
