@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Basic Color
+    -->
+    <color name="app_primary">#212121</color>
+    <color name="app_primary_dark">#000000</color>
+    <color name="app_bg">#303030</color>
+    <color name="app_bg_light">#474747</color>
+    <color name="app_accent">#18ffff</color>
+
+
+    <!--
+        Color Palette
+    -->
+
+    <color name="app_black">#000000</color>
+    <color name="app_gray_dark">#939393</color>
+    <color name="app_gray">#d3d3d3</color>
+    <color name="app_red">#ff1744</color>
+    <color name="app_red_transparent">#B8ed1c24</color>
+    <color name="app_white">#ffffff</color>
+    <color name="app_transparent_primary">#cc212121</color>
+    <color name="app_transparent_black_dark">#77000000</color>
+    <color name="app_transparent_black">#33000000</color>
+    <color name="app_transparent_pressed">#39ffffff</color>
+    <color name="app_transparent_ripple">#3effffff</color>
+    <color name="app_transparent_background">#e8303030</color>
+    <color name="app_transparent_background_light">#44303030</color>
+
+
+    <!--
+        Text Color
+    -->
+    <color name="text_color_accent">@color/app_accent</color>
+    <color name="text_color_accent_gray">#9918ffff</color>
+    <color name="text_color_white">@color/app_white</color>
+    <color name="text_color_gray">@color/app_gray</color>
+    <color name="text_color_gray_dark">@color/app_gray_dark</color>
+</resources>

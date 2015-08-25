@@ -36,7 +36,7 @@ public class RecyclerViewSampleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler_view_sample);
+        setContentView(R.layout.a_recycler_view_sample);
         ButterKnife.bind(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

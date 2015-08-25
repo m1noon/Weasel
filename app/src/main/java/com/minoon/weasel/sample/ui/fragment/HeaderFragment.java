@@ -33,7 +33,7 @@ public class HeaderFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_header, container, false);
+        return inflater.inflate(R.layout.f_header, container, false);
     }
 
     @Override

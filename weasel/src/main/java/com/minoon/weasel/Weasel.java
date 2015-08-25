@@ -6,7 +6,9 @@ import android.view.View;
 
 import com.minoon.weasel.util.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +25,7 @@ public class Weasel {
         return new RecyclerWeaselBuilder(recyclerView);
     }
 
-    final View mView;
+    final List<View> mView;
 
     private Map<Event, Animator> mAnimatorMap;
 
@@ -32,7 +34,8 @@ public class Weasel {
     private RecyclerWeaselConnector mRecyclerConnector;
 
     /* package */ Weasel(@NonNull View view) {
-        mView = view;
+        mView = new ArrayList<>();
+        mView.add(view);
         mRecyclerConnector = new RecyclerWeaselConnector(this);
     }
 
@@ -49,7 +52,9 @@ public class Weasel {
 
     public void chase(int scrollPosition) {
         if (mSmoothHelper != null) {
-            mSmoothHelper.transform(mView, scrollPosition);
+            for (View view: mView) {
+                mSmoothHelper.transform(view, scrollPosition);
+            }
         }
     }
 
@@ -60,7 +65,9 @@ public class Weasel {
         Animator animator = mAnimatorMap.get(ev);
         Logger.i(TAG, "onEvent. animator=" + animator + ", ev=" + ev);
         if(animator != null) {
-            animator.animate(mView);
+            for (View view: mView) {
+                animator.animate(view);
+            }
         }
     }
 
@@ -70,5 +77,15 @@ public class Weasel {
 
     public void addChaseView(ScrollableView scrollableView) {
         scrollableView.addWeasel(this);
+    }
+
+    public void addChaserView(View view) {
+        Logger.d(TAG, "add chaser view. chaser view size='%s'", mView.size());
+        mView.add(view);
+    }
+
+    public void removeChaserView(View view) {
+        Logger.d(TAG, "add chaser view. chaser view size='%s'", mView.size());
+        mView.remove(view);
     }
 }

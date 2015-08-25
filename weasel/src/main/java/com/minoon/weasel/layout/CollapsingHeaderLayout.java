@@ -98,6 +98,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+        Logger.d(TAG, "onLayout. l='%s', t='%s', r='%s', b='%s'", l, t, r, b);
         mRecyclerViews = getRecyclerViews(mDragView);
         if (mRecyclerViews.size() > 0) {
             mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerViews.get(0));

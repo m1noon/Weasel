@@ -11,4 +11,6 @@
     <string name="btn_sample_vertical_dragable">VerticalDraggableSample</string>
     <string name="btn_sample_recycler_view">RecyclerViewSample</string>
     <string name="btn_sample_collapsing_header">CollapsingHeaderSample</string>
+    <string name="btn_sample_tab_and_header">TabAndHeaderSample</string>
+    <string name="title_activity_tab_and_header_sample">TabAndHeaderSampleActivity</string>
 </resources>

@@ -18,7 +18,7 @@ public class FirstActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.a_first);
         ButterKnife.bind(this);
     }
 
@@ -52,5 +52,10 @@ public class FirstActivity extends AppCompatActivity {
     @OnClick(R.id.first_a_btn_sample_collapsing_header)
     public void onCliclCollapsingHeaderSample(View view) {
         CollapsingHeaderActivity.startActivity(this);
+    }
+
+    @OnClick(R.id.first_a_btn_sample_tab_and_header)
+    public void onClickTabAndHeaderSample() {
+        TabAndHeaderSampleActivity.startActivity(this);
     }
 }

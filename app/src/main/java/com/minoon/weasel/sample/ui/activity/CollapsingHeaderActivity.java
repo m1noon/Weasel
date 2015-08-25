@@ -38,7 +38,7 @@ public class CollapsingHeaderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collapsing_header_layout);
+        setContentView(R.layout.a_collapsing_header_layout);
         ButterKnife.bind(this);
 
         mCollapsingHeaderLayout.attachHeaderView(HeaderFragment.newInstance(), getFragmentManager());
