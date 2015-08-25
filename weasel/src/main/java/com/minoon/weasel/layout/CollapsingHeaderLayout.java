@@ -287,7 +287,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         Logger.d(TAG, String.format("flickToTop. dration='%s'", duration));
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, -distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROL_DOWN);
+        notifyEvent(Event.FLICK_SCROL_FORWARD);
     }
 
     public void flickToBottom(float velocity) {
@@ -296,7 +296,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         int duration = calculeteDurationByVelocity(velocity);
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROLL_UP);
+        notifyEvent(Event.FLICK_SCROLL_BACK);
     }
 
 
@@ -427,7 +427,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     @Override
     public void onOrientationChage(boolean up) {
-        Event ev = up ? Event.START_SCROLL_UP : Event.START_SCROLL_DOWN;
+        Event ev = up ? Event.START_SCROLL_BACK : Event.START_SCROLL_FORWARD;
         notifyEvent(ev);
     }
 

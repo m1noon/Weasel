@@ -38,7 +38,7 @@ public class RecyclerWeaselConnector extends RecyclerView.OnScrollListener imple
 
     @Override
     public void onOrientationChage(boolean up) {
-        Event ev = up ? Event.START_SCROLL_UP : Event.START_SCROLL_DOWN;
+        Event ev = up ? Event.START_SCROLL_BACK : Event.START_SCROLL_FORWARD;
         mWeasel.event(ev, mCurrentPosition);
     }
 }

@@ -74,8 +74,8 @@ public class TabAndHeaderSampleActivity extends AppCompatActivity implements Scr
 
         // set up header weasel
         mHeaderWeasel = Weasel.chase(recyclerView)
-                .at(Event.START_SCROLL_UP, new State(), duration)
-                .at(Event.START_SCROLL_DOWN, new State().translateY(-headerHeight), duration)
+                .at(Event.START_SCROLL_BACK, new State(), duration)
+                .at(Event.START_SCROLL_FORWARD, new State().translateY(-headerHeight), duration)
                 .start(mToolbar);
         Fragment f = getFragmentManager().findFragmentById(R.id.a_tab_and_header_sample_fl_container);
         if (f instanceof ViewPagerTabFragment) {
@@ -87,8 +87,8 @@ public class TabAndHeaderSampleActivity extends AppCompatActivity implements Scr
 
         // set up scroll view weasel
         mScrollViewWeasel = Weasel.chase(recyclerView)
-                .at(Event.START_SCROLL_UP, new State().translateY(headerHeight), duration)
-                .at(Event.START_SCROLL_DOWN, new State(), duration)
+                .at(Event.START_SCROLL_BACK, new State().translateY(headerHeight), duration)
+                .at(Event.START_SCROLL_FORWARD, new State(), duration)
                 .start(recyclerView);
     }
 

@@ -46,8 +46,8 @@ public class RecyclerViewSampleActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
         Weasel.chase(mRecyclerView)
-                .at(Event.START_SCROLL_UP, new State(), 400)
-                .at(Event.START_SCROLL_DOWN, new State().translateY(-300), 400)
+                .at(Event.START_SCROLL_BACK, new State(), 400)
+                .at(Event.START_SCROLL_FORWARD, new State().translateY(-300), 400)
                 .start(mToolbar);
     }
 }
