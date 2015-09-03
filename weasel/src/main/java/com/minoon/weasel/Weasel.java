@@ -14,11 +14,12 @@ import java.util.Map;
 /**
  * Created by a13587 on 15/06/28.
  */
-public class Weasel {
+public class Weasel<E extends Enum> {
     private static final String TAG = Logger.createTag(Weasel.class.getSimpleName());
 
-    public static WeaselBuilder chase(ScrollableView view) {
-        return new WeaselBuilder(view);
+    public enum WeaselEvent {
+        START_SCROLL_BACK,
+        START_SCROLL_FORWARD,
     }
 
     public static RecyclerWeaselBuilder chase(RecyclerView recyclerView) {
@@ -27,7 +28,7 @@ public class Weasel {
 
     final List<View> mView;
 
-    private Map<Event, Animator> mAnimatorMap;
+    private Map<E, Animator> mAnimatorMap;
 
     private SmoothChaseHelper mSmoothHelper;
 
@@ -43,7 +44,7 @@ public class Weasel {
         mSmoothHelper = helper;
     }
 
-    /* package */ void addEventAnimator(Event event, Animator animator) {
+    /* package */ void addEventAnimator(E event, Animator animator) {
         if (mAnimatorMap == null) {
             mAnimatorMap = new HashMap<>();
         }

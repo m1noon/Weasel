@@ -15,10 +15,6 @@ public class LinearLayoutRecyclerViewTrader implements TouchEventTrader {
         mRecyclerView = recyclerView;
     }
 
-    public void setRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
-    }
-
     @Override
     public boolean stealTouchEventForChild() {
         if(mRecyclerView == null) {

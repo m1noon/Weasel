@@ -18,6 +18,7 @@ import com.minoon.weasel.R;
 import com.minoon.weasel.ScrollableView;
 import com.minoon.weasel.State;
 import com.minoon.weasel.Weasel;
+import com.minoon.weasel.WeaselBuilder;
 import com.minoon.weasel.state.HideAtWindowTopState;
 import com.minoon.weasel.trader.LinearLayoutRecyclerViewTrader;
 import com.minoon.weasel.trader.TouchEventTrader;
@@ -32,9 +33,14 @@ import java.util.List;
  * Created by a13587 on 15/06/27.
  */
 public class CollapsingHeaderView extends RelativeLayout implements TouchEventHelper.Callback,
-        ScrollableView,
+        ScrollableView<CollapsingHeaderView.WeaselEvent>,
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {
     private static final String TAG = Logger.createTag(CollapsingHeaderView.class.getSimpleName());
+
+    public enum WeaselEvent {
+        START_SCROLL_BACK,
+        START_SCROLL_FORWARD,
+    }
 
     /**
      * Listener for drag event.
@@ -407,6 +413,11 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
         mWeasels.add(weasel);
     }
 
+    @Override
+    public WeaselBuilder<WeaselEvent> startWeasel() {
+        return new WeaselBuilder<>(this);
+    }
+
     private void notifyScroll() {
         int scrollPosition = getBottomBounds() - getScrollPositionY() + mContentScrollPosition;
         for (Weasel w : mWeasels) {
@@ -447,7 +458,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
 
     private void setupWeasel() {
         if (mWeasel == null) {
-            mWeasel = Weasel.chase(this)
+            mWeasel = startWeasel()
                     .from(new State())
                     .to(new HideAtWindowTopState(mHeaderView).alpha(0))
                     .ratio(0.6f)

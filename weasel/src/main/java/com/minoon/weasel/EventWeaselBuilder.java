@@ -10,10 +10,10 @@ import java.util.Map;
 /**
  * Created by a13587 on 15/08/08.
  */
-public abstract class EventWeaselBuilder {
+public abstract class EventWeaselBuilder<E extends Enum> {
     private static final String TAG = EventWeaselBuilder.class.getSimpleName();
 
-    private final Map<Event, Animator> animators;
+    private final Map<E, Animator> animators;
 
     /* package */ static EventWeaselBuilder create(RecyclerView recyclerView) {
         return new EventRecyclerWeaselBuilder(recyclerView);
@@ -31,7 +31,7 @@ public abstract class EventWeaselBuilder {
     protected abstract void addWeaselToScrollView(Weasel weasel);
 
 
-    public EventWeaselBuilder at(Event event, State state, long duration) {
+    public EventWeaselBuilder at(E event, State state, long duration) {
         animators.put(event, new BasicAnimator(state, duration));
         return this;
     }
@@ -43,10 +43,10 @@ public abstract class EventWeaselBuilder {
      */
     public Weasel start(@NonNull View chaserView) {
         // setup listener and add to ScrollableView.
-        Weasel weasel = new Weasel(chaserView);
+        Weasel<E> weasel = new Weasel<>(chaserView);
 
         // event
-        for (Event ev : animators.keySet()) {
+        for (E ev : animators.keySet()) {
             weasel.addEventAnimator(ev, animators.get(ev));
         }
 

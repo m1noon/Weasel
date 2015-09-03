@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import com.minoon.weasel.sample.R;
 import com.minoon.weasel.sample.ui.ScrollChaser;
 import com.minoon.weasel.sample.ui.adapter.SampleFragmentAdapter;
-import com.minoon.weasel.trader.LinearLayoutRecyclerViewTrader;
-import com.minoon.weasel.trader.TouchEventTrader;
 
 /**
  *
@@ -24,18 +22,11 @@ public class SampleFragment extends Fragment {
 
     RecyclerView mRecyclerView;
 
-    LinearLayoutRecyclerViewTrader mTrader;
-
     public static SampleFragment newInstance() {
         SampleFragment fragment = new SampleFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public SampleFragment() {
-        // Required empty public constructor
-        mTrader = new LinearLayoutRecyclerViewTrader(null);
     }
 
     @Override
@@ -56,7 +47,6 @@ public class SampleFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_sample_rv_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new SampleFragmentAdapter());
-        mTrader.setRecyclerView(mRecyclerView);
 
         Log.d(TAG, "onViewCreated.");
         Activity a = getActivity();
@@ -72,9 +62,5 @@ public class SampleFragment extends Fragment {
         if (a instanceof ScrollChaser) {
             ((ScrollChaser)a).chaseEnd(mRecyclerView);
         }
-    }
-
-    public TouchEventTrader getTouchEventTrader() {
-        return mTrader;
     }
 }

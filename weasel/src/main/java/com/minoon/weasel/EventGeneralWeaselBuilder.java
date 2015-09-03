@@ -3,12 +3,12 @@ package com.minoon.weasel;
 /**
  * Created by a13587 on 15/08/08.
  */
-/* package */ class EventGeneralWeaselBuilder extends EventWeaselBuilder {
+/* package */ class EventGeneralWeaselBuilder<E extends Enum> extends EventWeaselBuilder {
     private static final String TAG = EventGeneralWeaselBuilder.class.getSimpleName();
 
-    ScrollableView mScrollableView;
+    ScrollableView<E> mScrollableView;
 
-    /* package */ EventGeneralWeaselBuilder(ScrollableView scrollableView) {
+    /* package */ EventGeneralWeaselBuilder(ScrollableView<E> scrollableView) {
         if (scrollableView == null) {
             throw new NullPointerException("ScrollableView is null.");
         }
