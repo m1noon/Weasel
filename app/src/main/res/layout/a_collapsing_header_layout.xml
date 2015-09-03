@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.minoon.weasel.layout.CollapsingHeaderLayout
+    <com.minoon.weasel.layout.CollapsingHeaderView
         android:id="@+id/activity_collapsing_header_chl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -21,8 +21,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A sample
- *
+ * A sample which has ViewPager and Tab.
+ * Toolbar and tab is moved in accordance with the scroll of RecyclerView in ViewPager.
  */
 public class TabAndHeaderSampleActivity extends AppCompatActivity implements ScrollChaser {
 
@@ -54,7 +54,10 @@ public class TabAndHeaderSampleActivity extends AppCompatActivity implements Scr
         setSupportActionBar(mToolbar);
     }
 
-    /** {@link ScrollChaser} */
+    /**
+     * {@link ScrollChaser}
+     * These method call from fragment in a ViewPager
+     */
 
     @Override
     public void chaseStart(RecyclerView recyclerView) {

@@ -31,16 +31,16 @@ import java.util.List;
 /**
  * Created by a13587 on 15/06/27.
  */
-public class CollapsingHeaderLayout extends RelativeLayout implements TouchEventHelper.Callback,
+public class CollapsingHeaderView extends RelativeLayout implements TouchEventHelper.Callback,
         ScrollableView,
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {
-    private static final String TAG = Logger.createTag(CollapsingHeaderLayout.class.getSimpleName());
+    private static final String TAG = Logger.createTag(CollapsingHeaderView.class.getSimpleName());
 
     /**
      * Listener for drag event.
      */
     public interface DragListener {
-        void onDragged(CollapsingHeaderLayout view, int y, int dy, float progress);
+        void onDragged(CollapsingHeaderView view, int y, int dy, float progress);
     }
 
     private static final int INVALID_POINTER = -1;
@@ -72,17 +72,17 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     private List<RecyclerView> mRecyclerViews = new ArrayList<>();
 
-    public CollapsingHeaderLayout(Context context) {
+    public CollapsingHeaderView(Context context) {
         this(context, null);
     }
 
-    public CollapsingHeaderLayout(Context context, AttributeSet attrs) {
+    public CollapsingHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
     public Weasel mWeasel;
 
-    public CollapsingHeaderLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CollapsingHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.layout_clollapsing_header, this);

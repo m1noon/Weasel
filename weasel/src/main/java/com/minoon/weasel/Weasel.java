@@ -88,4 +88,12 @@ public class Weasel {
         Logger.d(TAG, "add chaser view. chaser view size='%s'", mView.size());
         mView.remove(view);
     }
+
+    public int getChaserViewSize() {
+        return mView.size();
+    }
+
+    public boolean containsChaserView(View view) {
+        return mView.contains(view);
+    }
 }
