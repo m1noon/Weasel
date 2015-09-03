@@ -10,7 +10,7 @@ public interface ScrollableView<E extends Enum> {
      *
      * @param listener
      */
-    void addWeasel(Weasel listener);
+    void addWeasel(Weasel<E> listener);
 
     /**
      * Create WeaselBuilder to setup scroll animation.

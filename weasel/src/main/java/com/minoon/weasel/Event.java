@@ -5,7 +5,5 @@ package com.minoon.weasel;
  */
 public enum Event {
     START_SCROLL_BACK,
-    START_SCROLL_FORWARD,
-    FLICK_SCROL_FORWARD,
-    FLICK_SCROLL_BACK
+    START_SCROLL_FORWARD
 }

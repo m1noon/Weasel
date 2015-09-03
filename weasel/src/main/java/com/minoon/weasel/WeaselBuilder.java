@@ -34,4 +34,15 @@ public class WeaselBuilder<E extends Enum> {
     public EventWeaselBuilder at(E event, State state, long duration) {
         return EventWeaselBuilder.create(mScrollableView).at(event, state, duration);
     }
+
+    /**
+     * set the animator used when the specified event is called.
+     *
+     * @param event
+     * @param animator
+     * @return
+     */
+    public EventWeaselBuilder<E> at(E event, Animator animator) {
+        return EventWeaselBuilder.create(mScrollableView).at(event, animator);
+    }
 }

@@ -10,7 +10,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.minoon.weasel.Event;
 import com.minoon.weasel.ScrollableView;
 import com.minoon.weasel.State;
 import com.minoon.weasel.Weasel;
@@ -36,6 +35,10 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     public enum WeaselEvent {
         START_SCROLL_BACK,
         START_SCROLL_FORWARD,
+        DRAG_TO_TOP,
+        DRAG_FROM_TOP,
+        FLICK_SCROLL_BACK,
+        FLICK_SCROLL_FORWARD
     }
 
     private static final int INVALID_POINTER = -1;
@@ -53,13 +56,13 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     private TouchEventHelper mTouchEventHelper;
 
-    private final List<Weasel> mWeasels;
+    private final List<Weasel<WeaselEvent>> mWeasels;
 
     private int mContentScrollPosition = 0;
 
     private ScrollOrientationChangeHelper mScrollOrientationHelper;
 
-    private float mHeaderDragMultiplier = 0.8f;
+    private float mHeaderDragMultiplier = 0.6f;
 
     private boolean mInterceptHeaderTouchEventForScroll = true;
 
@@ -231,10 +234,6 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     //// DragView position
 
-    public void setDragViewBottom() {
-        scrollDragViewTo(getBottomBounds());
-    }
-
     public boolean isAtTop() {
         return mDragView.getTop() <= 0;
     }
@@ -247,17 +246,13 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         return mHeaderView.getBottom();
     }
 
-    public int getYInScrollRange(int y) {
-        return Math.min(Math.max(y, getTopBounds()), getBottomBounds());
-    }
-
     public void flickToTop(float velocity) {
         int distance = calculateDistanceByVelocity(velocity);
         int duration = calculeteDurationByVelocity(velocity);
         Logger.d(TAG, String.format("flickToTop. dration='%s'", duration));
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, -distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROL_FORWARD);
+        notifyEvent(WeaselEvent.FLICK_SCROLL_FORWARD);
     }
 
     public void flickToBottom(float velocity) {
@@ -266,7 +261,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         int duration = calculeteDurationByVelocity(velocity);
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROLL_BACK);
+        notifyEvent(WeaselEvent.FLICK_SCROLL_BACK);
     }
 
 
@@ -300,6 +295,11 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         int oldTop = mDragView.getTop();
         mDragView.setTop(top);
         final int dy = oldTop - top;
+        if (oldTop == 0 && dy < 0) {
+            notifyEvent(WeaselEvent.DRAG_FROM_TOP);
+        } else if (top == 0 && dy > 0){
+            notifyEvent(WeaselEvent.DRAG_TO_TOP);
+        }
     }
 
     //// View tool
@@ -365,11 +365,11 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     }
 
 
-    //// Weasel
+    /** {@link ScrollableView} */
 
 
     @Override
-    public void addWeasel(Weasel weasel) {
+    public void addWeasel(Weasel<WeaselEvent> weasel) {
         mWeasels.add(weasel);
     }
 
@@ -385,9 +385,9 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         }
     }
 
-    private void notifyEvent(Event ev) {
+    private void notifyEvent(WeaselEvent ev) {
         int scrollPosition = getBottomBounds() - getScrollPositionY() + mContentScrollPosition;
-        for (Weasel w : mWeasels) {
+        for (Weasel<WeaselEvent> w : mWeasels) {
             w.event(ev, scrollPosition);
         }
     }
@@ -398,7 +398,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     @Override
     public void onOrientationChage(boolean up) {
-        Event ev = up ? Event.START_SCROLL_BACK : Event.START_SCROLL_FORWARD;
+        WeaselEvent ev = up ? WeaselEvent.START_SCROLL_BACK : WeaselEvent.START_SCROLL_FORWARD;
         notifyEvent(ev);
     }
 
@@ -412,7 +412,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
             mWeasel = startWeasel()
                     .from(new State())
                     .to(new HideAtWindowTopState(mHeaderView).alpha(0))
-                    .ratio(0.6f)
+                    .ratio(mHeaderDragMultiplier)
                     .start(mHeaderView);
         }
     }

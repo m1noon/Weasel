@@ -31,8 +31,13 @@ public abstract class EventWeaselBuilder<E extends Enum> {
     protected abstract void addWeaselToScrollView(Weasel weasel);
 
 
-    public EventWeaselBuilder at(E event, State state, long duration) {
+    public EventWeaselBuilder<E> at(E event, State state, long duration) {
         animators.put(event, new BasicAnimator(state, duration));
+        return this;
+    }
+
+    public EventWeaselBuilder<E> at(E event, Animator animator) {
+        animators.put(event, animator);
         return this;
     }
 

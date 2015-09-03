@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.minoon.weasel.Event;
 import com.minoon.weasel.R;
 import com.minoon.weasel.ScrollableView;
 import com.minoon.weasel.State;
@@ -40,6 +39,8 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
     public enum WeaselEvent {
         START_SCROLL_BACK,
         START_SCROLL_FORWARD,
+        FLICK_SCROLL_BACK,
+        FLICK_SCROLL_FORWARD
     }
 
     /**
@@ -64,7 +65,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
 
     private TouchEventHelper mTouchEventHelper;
 
-    private final List<Weasel> mWeasels;
+    private final List<Weasel<CollapsingHeaderView.WeaselEvent>> mWeasels;
 
     private int mContentScrollPosition = 0;
 
@@ -293,7 +294,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
         Logger.d(TAG, String.format("flickToTop. dration='%s'", duration));
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, -distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROL_FORWARD);
+        notifyEvent(WeaselEvent.FLICK_SCROLL_FORWARD);
     }
 
     public void flickToBottom(float velocity) {
@@ -302,7 +303,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
         int duration = calculeteDurationByVelocity(velocity);
         mScroller.startScroll(getScrollPositionX(), getScrollPositionY(), 0, distance, duration);
         postInvalidate();
-        notifyEvent(Event.FLICK_SCROLL_BACK);
+        notifyEvent(WeaselEvent.FLICK_SCROLL_BACK);
     }
 
 
@@ -425,7 +426,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
         }
     }
 
-    private void notifyEvent(Event ev) {
+    private void notifyEvent(WeaselEvent ev) {
         int scrollPosition = getBottomBounds() - getScrollPositionY() + mContentScrollPosition;
         for (Weasel w : mWeasels) {
             w.event(ev, scrollPosition);
@@ -438,7 +439,7 @@ public class CollapsingHeaderView extends RelativeLayout implements TouchEventHe
 
     @Override
     public void onOrientationChage(boolean up) {
-        Event ev = up ? Event.START_SCROLL_BACK : Event.START_SCROLL_FORWARD;
+        WeaselEvent ev = up ? WeaselEvent.START_SCROLL_BACK : WeaselEvent.START_SCROLL_FORWARD;
         notifyEvent(ev);
     }
 

@@ -11,11 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.minoon.weasel.Animator;
 import com.minoon.weasel.layout.CollapsingHeaderLayout;
 import com.minoon.weasel.sample.R;
 import com.minoon.weasel.sample.ui.adapter.SampleFragmentAdapter;
@@ -67,5 +69,29 @@ public class CollapsingHeaderLayoutActivity extends AppCompatActivity {
                 Toast.makeText(CollapsingHeaderLayoutActivity.this, "hello Weasel!!", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        mCollapsingHeaderView.startWeasel()
+                .at(CollapsingHeaderLayout.WeaselEvent.DRAG_TO_TOP, new Animator() {
+                    @Override
+                    public void animate(View view) {
+                        Log.i(TAG, "at drag to top");
+                        Drawable d = view.getBackground();
+                        if (d instanceof TransitionDrawable) {
+                            ((TransitionDrawable) d).startTransition(300);
+                        }
+                    }
+                })
+                .at(CollapsingHeaderLayout.WeaselEvent.DRAG_FROM_TOP, new Animator() {
+                    @Override
+                    public void animate(View view) {
+                        Log.i(TAG, "at drag from top");
+                        Drawable d = view.getBackground();
+                        if (d instanceof TransitionDrawable) {
+                            ((TransitionDrawable) d).reverseTransition(300);
+                        }
+                    }
+                })
+                .start(mToolbar);
     }
 }

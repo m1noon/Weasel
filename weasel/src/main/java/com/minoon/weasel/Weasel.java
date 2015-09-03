@@ -12,15 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by a13587 on 15/06/28.
+ *
+ * @param <E> EventType
  */
 public class Weasel<E extends Enum> {
     private static final String TAG = Logger.createTag(Weasel.class.getSimpleName());
-
-    public enum WeaselEvent {
-        START_SCROLL_BACK,
-        START_SCROLL_FORWARD,
-    }
 
     public static RecyclerWeaselBuilder chase(RecyclerView recyclerView) {
         return new RecyclerWeaselBuilder(recyclerView);
@@ -59,7 +55,7 @@ public class Weasel<E extends Enum> {
         }
     }
 
-    public void event(Event ev, int scrollPosition) {
+    public void event(E ev, int scrollPosition) {
         if(mAnimatorMap == null) {
             return;
         }
@@ -76,7 +72,7 @@ public class Weasel<E extends Enum> {
         recyclerView.addOnScrollListener(mRecyclerConnector);
     }
 
-    public void addChaseView(ScrollableView scrollableView) {
+    public void addChaseView(ScrollableView<E> scrollableView) {
         scrollableView.addWeasel(this);
     }
 
