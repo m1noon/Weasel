@@ -1,6 +1,7 @@
 package com.minoon.weasel.layout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -10,6 +11,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
+import com.minoon.weasel.R;
 import com.minoon.weasel.ScrollableView;
 import com.minoon.weasel.State;
 import com.minoon.weasel.Weasel;
@@ -62,11 +64,14 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     private ScrollOrientationChangeHelper mScrollOrientationHelper;
 
-    private float mHeaderDragMultiplier = 0.6f;
+    private float mHeaderDragMultiplier = 1f;
+    private float mHeaderAlpha = 1f;
 
     private boolean mInterceptHeaderTouchEventForScroll = true;
 
     private RecyclerView mRecyclerView;
+
+    public Weasel mWeasel;
 
     public CollapsingHeaderLayout(Context context) {
         this(context, null);
@@ -76,14 +81,19 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         this(context, attrs, 0);
     }
 
-    public Weasel mWeasel;
-
     public CollapsingHeaderLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mWeasels = new ArrayList<>();
         mScroller = new Scroller(context, new DecelerateInterpolator());
         mTouchEventHelper = new TouchEventHelper(context, this);
         mScrollOrientationHelper = new ScrollOrientationChangeHelper(this);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CollapsingHeaderLayout);
+        if (a != null) {
+            mHeaderAlpha = a.getFloat(R.styleable.CollapsingHeaderLayout_chl_alpha, 1f);
+            mHeaderDragMultiplier = a.getFloat(R.styleable.CollapsingHeaderLayout_chl_scrollMultiplier, 1f);
+            mInterceptHeaderTouchEventForScroll = a.getBoolean(R.styleable.CollapsingHeaderLayout_chl_interceptHeaderTouchForScroll, true);
+        }
     }
 
     @Override
@@ -216,7 +226,6 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
             int x = mScroller.getCurrX();
             int y = mScroller.getCurrY();
             final int dy = y - mScrollerOldY;
-            Logger.d(TAG, String.format("[computeScroll]posX='%s', posY='%s', toX='%s', toY='%s', dy='%s'", oldX, oldY, x, y, dy));
             // 縦方向
             scrollViewBy(0, dy);
             mScrollerOldY = y;
@@ -411,7 +420,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
         if (mWeasel == null) {
             mWeasel = startWeasel()
                     .from(new State())
-                    .to(new HideAtWindowTopState(mHeaderView).alpha(0))
+                    .to(new HideAtWindowTopState(mHeaderView).alpha(mHeaderAlpha))
                     .ratio(mHeaderDragMultiplier)
                     .start(mHeaderView);
         }

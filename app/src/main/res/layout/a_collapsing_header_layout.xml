@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,6 +9,9 @@
         android:id="@+id/a_collapsing_header_layout_chl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:chl_alpha="0"
+        app:chl_scrollMultiplier="0.4"
+        app:chl_interceptHeaderTouchForScroll="false"
         >
         <!-- First view is the header -->
         <ImageView
