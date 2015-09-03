@@ -27,6 +27,14 @@
         />
 
     <Button
+        android:id="@+id/first_a_btn_sample_collapsing_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/btn_sample_collapsing_header_layout"
+        />
+
+    <Button
         android:id="@+id/first_a_btn_sample_tab_and_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

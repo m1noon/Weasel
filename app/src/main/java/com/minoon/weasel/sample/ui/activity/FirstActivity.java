@@ -54,6 +54,11 @@ public class FirstActivity extends AppCompatActivity {
         CollapsingHeaderActivity.startActivity(this);
     }
 
+    @OnClick(R.id.first_a_btn_sample_collapsing_header_layout)
+    public void onClickCollapsingHeaderLayoutSample(View view) {
+        CollapsingHeaderLayoutActivity.startActivity(this);
+    }
+
     @OnClick(R.id.first_a_btn_sample_tab_and_header)
     public void onClickTabAndHeaderSample() {
         TabAndHeaderSampleActivity.startActivity(this);

@@ -4,14 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.minoon.weasel.layout.CollapsingHeaderView
-        android:id="@+id/activity_collapsing_header_chl_container"
+    <com.minoon.weasel.layout.CollapsingHeaderLayout
+        android:id="@+id/a_collapsing_header_layout_chl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        >
+        <!-- First view is the header -->
+        <ImageView
+            android:id="@+id/a_collapsing_header_layout_iv_header_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Second view is the scroll view -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/a_collapsing_header_layout_rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_below="@id/a_collapsing_header_layout_iv_header_image"
+            />
+
+    </com.minoon.weasel.layout.CollapsingHeaderLayout>
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_collapsing_header_tb_toolbar"
+        android:id="@+id/a_collapsing_header_layout_tb_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         />
