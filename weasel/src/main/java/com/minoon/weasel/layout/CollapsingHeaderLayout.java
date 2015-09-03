@@ -152,7 +152,7 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
             default:
                 break;
         }
-        boolean interceptTap = isViewUnder(mDragView, (int) ev.getX(), (int) ev.getY()) || mInterceptHeaderTouchEventForScroll;
+        boolean interceptTap = isViewHit(mDragView, (int) ev.getX(), (int) ev.getY()) || mInterceptHeaderTouchEventForScroll;
         return interceptTap;
     }
 
@@ -313,18 +313,6 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         }
     }
 
-    //// View tool
-
-    public boolean isViewUnder(View view, int x, int y) {
-        if (view == null) {
-            return false;
-        }
-        return x >= view.getLeft() &&
-                x < view.getRight() &&
-                y >= view.getTop() &&
-                y < view.getBottom();
-    }
-
 
     /** {@link TouchEventHelper.Callback} */
 
@@ -349,8 +337,12 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
 
     @Override
     public void dispathcTouchEventForChild(MotionEvent ev) {
-        ev = cloneMotionEventWithFixPosition(ev);
-        mDragView.dispatchTouchEvent(ev);
+        MotionEvent cloneEv = cloneMotionEventWithFixPosition(ev);
+        if (isViewHit(mDragView, (int)ev.getX(), (int)ev.getY())) {
+            mDragView.dispatchTouchEvent(cloneEv);
+        } else if (isViewHit(mHeaderView, (int)ev.getX(), (int)ev.getY())) {
+            mHeaderView.dispatchTouchEvent(cloneEv);
+        }
     }
 
     @Override
@@ -411,11 +403,6 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
     public void onOrientationChage(boolean up) {
         WeaselEvent ev = up ? WeaselEvent.START_SCROLL_BACK : WeaselEvent.START_SCROLL_FORWARD;
         notifyEvent(ev);
-    }
-
-    public void enableScrollByHeaderTouchEvent(boolean enable) {
-        // TODO うまく動作していないので調査
-        mInterceptHeaderTouchEventForScroll = enable;
     }
 
     private void setupWeasel() {
