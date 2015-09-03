@@ -36,6 +36,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {
     private static final String TAG = Logger.createTag(CollapsingHeaderLayout.class.getSimpleName());
 
+    private static final int NO_SAVE_VALUE = -1;
+
     public enum WeaselEvent {
         START_SCROLL_BACK,
         START_SCROLL_FORWARD,
@@ -74,6 +76,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
     private RecyclerView mRecyclerView;
 
     private int savedStartPosition = -1;
+    private float savedHeaderAlpha = NO_SAVE_VALUE;
+    private float savedHeaderTranslationY = NO_SAVE_VALUE;
 
     public Weasel mWeasel;
 
@@ -110,6 +114,15 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         mDragView = getChildAt(1);
         int firstPosition = savedStartPosition == -1 ? getBottomBounds() : savedStartPosition;
         mDragView.setTop(firstPosition);
+        if (savedHeaderAlpha != NO_SAVE_VALUE) {
+            Logger.i(TAG, "setSavedValue. alpha='%s', y='%s'", savedHeaderAlpha, savedHeaderTranslationY);
+            mHeaderView.setAlpha(savedHeaderAlpha);
+            mHeaderView.setTranslationY(savedHeaderTranslationY);
+            // set NO_VALUE
+            savedHeaderAlpha = NO_SAVE_VALUE;
+            savedHeaderTranslationY = NO_SAVE_VALUE;
+        }
+
         // find first RecyclerView in the DragView.
         mRecyclerView = getFirstRecyclerView(mDragView);
         mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerView);
@@ -251,7 +264,10 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
     //// DragView position
 
     public boolean isAtTop() {
-        return mDragView.getTop() <= 0;
+        if (mDragView != null) {
+            return mDragView.getTop() <= 0;
+        }
+        return savedStartPosition == 0;
     }
 
     public int getTopBounds() {
@@ -310,6 +326,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         top = Math.max(getTopBounds(), Math.min(getBottomBounds(), top));
         int oldTop = mDragView.getTop();
         mDragView.setTop(top);
+        // save the drag view position moved by user.
+        savedStartPosition = top;
         final int dy = oldTop - top;
         if (oldTop == 0 && dy < 0) {
             notifyEvent(WeaselEvent.DRAG_FROM_TOP);
@@ -443,20 +461,33 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
 
     /* package */ static class StreamPlayerViewSavedState extends BaseSavedState {
         int dragViewPosition;
+        float headerAlpha;
+        float headerTranslationY;
+        int contentScrollPosition;
 
         public StreamPlayerViewSavedState(Parcel source) {
             super(source);
-            this.dragViewPosition = source.readInt();
+            readFromParcel(source);
         }
 
         public StreamPlayerViewSavedState(Parcelable superState) {
             super(superState);
         }
 
+        private void readFromParcel(Parcel source) {
+            this.dragViewPosition = source.readInt();
+            this.headerAlpha = source.readFloat();
+            this.headerTranslationY = source.readFloat();
+            this.contentScrollPosition = source.readInt();
+        }
+
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(dragViewPosition);
+            dest.writeFloat(headerAlpha);
+            dest.writeFloat(headerTranslationY);
+            dest.writeInt(contentScrollPosition);
         }
 
         public static final Parcelable.Creator<StreamPlayerViewSavedState> CREATOR = new Creator<StreamPlayerViewSavedState>() {
@@ -477,6 +508,9 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         Parcelable superState = super.onSaveInstanceState();
         StreamPlayerViewSavedState ss = new StreamPlayerViewSavedState(superState);
         ss.dragViewPosition = mDragView.getTop();
+        ss.headerAlpha = mHeaderView.getAlpha();
+        ss.headerTranslationY = mHeaderView.getTranslationY();
+        ss.contentScrollPosition = mContentScrollPosition;
         return ss;
     }
 
@@ -485,6 +519,9 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         StreamPlayerViewSavedState ss = (StreamPlayerViewSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         savedStartPosition = ss.dragViewPosition;
+        savedHeaderAlpha = ss.headerAlpha;
+        savedHeaderTranslationY = ss.headerTranslationY;
+        mContentScrollPosition = ss.contentScrollPosition;
         requestLayout();
     }
 }
