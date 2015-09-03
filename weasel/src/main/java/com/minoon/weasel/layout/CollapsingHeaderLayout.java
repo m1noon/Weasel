@@ -2,6 +2,8 @@ package com.minoon.weasel.layout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -71,6 +73,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
 
     private RecyclerView mRecyclerView;
 
+    private int savedStartPosition = -1;
+
     public Weasel mWeasel;
 
     public CollapsingHeaderLayout(Context context) {
@@ -104,7 +108,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         // find 'HeaderView' and 'DragView' and layout DragView under the HeaderView.
         mHeaderView = getChildAt(0);
         mDragView = getChildAt(1);
-        mDragView.setTop(getBottomBounds());
+        int firstPosition = savedStartPosition == -1 ? getBottomBounds() : savedStartPosition;
+        mDragView.setTop(firstPosition);
         // find first RecyclerView in the DragView.
         mRecyclerView = getFirstRecyclerView(mDragView);
         mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerView);
@@ -357,7 +362,8 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
                 mTouchEventTrader.scrollBy(dx, -dy);
                 mContentScrollPosition -= dy;
             }
-        } else {
+        } else if (hasMoreContent(mRecyclerView)){
+            // move drag view if recycler view has more content. TODO consider not RecyclerView
             mContentScrollPosition = 0;
             scrollDragViewTo(getScrollPositionY() + dy);
         }
@@ -365,6 +371,22 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         mScrollOrientationHelper.onScroll(-dy);
 
         notifyScroll();
+    }
+
+    private boolean hasMoreContent(RecyclerView r) {
+        final int itemCount = r.getAdapter().getItemCount();
+        int lastVisibleItemPosition = -1;
+        RecyclerView.LayoutManager lm = r.getLayoutManager();
+        final int myBottom = getBottom();
+        for (int i = lm.getChildCount() - 1; i >= 0; i--) {
+            View v = lm.getChildAt(i);
+            if (myBottom > v.getBottom() + getScrollPositionY()) {
+                lastVisibleItemPosition = i;
+                break;
+            }
+        }
+        Logger.d(TAG, "lastVisibleItemPosition='%s', itemCount='%s'", lastVisibleItemPosition, itemCount);
+        return lastVisibleItemPosition != -1 && lastVisibleItemPosition < itemCount - 1;
     }
 
 
@@ -413,5 +435,56 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
                     .ratio(mHeaderDragMultiplier)
                     .start(mHeaderView);
         }
+    }
+
+
+    //// SaveState
+
+
+    /* package */ static class StreamPlayerViewSavedState extends BaseSavedState {
+        int dragViewPosition;
+
+        public StreamPlayerViewSavedState(Parcel source) {
+            super(source);
+            this.dragViewPosition = source.readInt();
+        }
+
+        public StreamPlayerViewSavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(dragViewPosition);
+        }
+
+        public static final Parcelable.Creator<StreamPlayerViewSavedState> CREATOR = new Creator<StreamPlayerViewSavedState>() {
+            @Override
+            public StreamPlayerViewSavedState createFromParcel(Parcel source) {
+                return new StreamPlayerViewSavedState(source);
+            }
+
+            @Override
+            public StreamPlayerViewSavedState[] newArray(int size) {
+                return new StreamPlayerViewSavedState[size];
+            }
+        };
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        StreamPlayerViewSavedState ss = new StreamPlayerViewSavedState(superState);
+        ss.dragViewPosition = mDragView.getTop();
+        return ss;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        StreamPlayerViewSavedState ss = (StreamPlayerViewSavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        savedStartPosition = ss.dragViewPosition;
+        requestLayout();
     }
 }

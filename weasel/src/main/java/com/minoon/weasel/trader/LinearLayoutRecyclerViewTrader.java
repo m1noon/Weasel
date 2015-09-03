@@ -21,7 +21,7 @@ public class LinearLayoutRecyclerViewTrader implements TouchEventTrader {
             return false;
         }
         LinearLayoutManager lm = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        return lm.findFirstCompletelyVisibleItemPosition() != 0;
+        return lm.findFirstCompletelyVisibleItemPosition() > 0;
     }
 
     @Override
