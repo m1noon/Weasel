@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.Scroller;
 
 import com.minoon.weasel.R;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by a13587 on 15/06/27.
  */
-public class CollapsingHeaderLayout extends RelativeLayout implements TouchEventHelper.Callback,
+public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHelper.Callback,
         ScrollableView<CollapsingHeaderLayout.WeaselEvent>,
         ScrollOrientationChangeHelper.ScrollOrientationChangeListener {
     private static final String TAG = Logger.createTag(CollapsingHeaderLayout.class.getSimpleName());
@@ -66,8 +66,8 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     private float mHeaderDragMultiplier = 1f;
     private float mHeaderAlpha = 1f;
-
     private boolean mInterceptHeaderTouchEventForScroll = true;
+    private int mFirstPositionOffset;
 
     private RecyclerView mRecyclerView;
 
@@ -93,6 +93,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
             mHeaderAlpha = a.getFloat(R.styleable.CollapsingHeaderLayout_chl_alpha, 1f);
             mHeaderDragMultiplier = a.getFloat(R.styleable.CollapsingHeaderLayout_chl_scrollMultiplier, 1f);
             mInterceptHeaderTouchEventForScroll = a.getBoolean(R.styleable.CollapsingHeaderLayout_chl_interceptHeaderTouchForScroll, true);
+            mFirstPositionOffset = a.getDimensionPixelOffset(R.styleable.CollapsingHeaderLayout_chl_firstPositionOffset, 0);
         }
     }
 
@@ -100,9 +101,10 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         Logger.d(TAG, "onLayout. l='%s', t='%s', r='%s', b='%s'", l, t, r, b);
-        // find 'HeaderView' and 'DragView'
+        // find 'HeaderView' and 'DragView' and layout DragView under the HeaderView.
         mHeaderView = getChildAt(0);
         mDragView = getChildAt(1);
+        mDragView.setTop(getBottomBounds());
         // find first RecyclerView in the DragView.
         mRecyclerView = getFirstRecyclerView(mDragView);
         mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerView);
@@ -157,13 +159,13 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Logger.d(TAG, "[onTouchEvent]x=" + getScrollPositionX() + ", y=" + getScrollPositionY() + ", from=" + mDragView.getBottom());
+//        Logger.v(TAG, "[onTouchEvent]x=" + getScrollPositionX() + ", y=" + getScrollPositionY() + ", from=" + mDragView.getBottom());
         mTouchEventHelper.onTouchEvent(ev);
         if(ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
             mScroller.abortAnimation();
         }
-        boolean isViewHit = isViewHit(mDragView, (int) ev.getX(), (int) ev.getY());
-        return isViewHit;
+        boolean continueHandleTouch = isViewHit(mDragView, (int) ev.getX(), (int) ev.getY()) || mInterceptHeaderTouchEventForScroll;
+        return continueHandleTouch;
     }
 
     /**
@@ -252,7 +254,7 @@ public class CollapsingHeaderLayout extends RelativeLayout implements TouchEvent
     }
 
     public int getBottomBounds() {
-        return mHeaderView.getBottom();
+        return mHeaderView.getBottom() + mFirstPositionOffset;
     }
 
     public void flickToTop(float velocity) {

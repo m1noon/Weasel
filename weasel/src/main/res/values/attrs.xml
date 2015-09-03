@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CollapsingHeaderLayout">
-        <attr name="chl_alpha" format="float"/>
-        <attr name="chl_scrollMultiplier" format="float" />
+        <attr name="chl_alpha" format="float|reference"/>
+        <attr name="chl_scrollMultiplier" format="float|reference" />
         <attr name="chl_interceptHeaderTouchForScroll" format="boolean"/>
+        <attr name="chl_firstPositionOffset" format="dimension|reference"/>
     </declare-styleable>
 </resources>

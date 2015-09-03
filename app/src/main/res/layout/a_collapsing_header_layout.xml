@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         app:chl_alpha="0"
         app:chl_scrollMultiplier="0.4"
-        app:chl_interceptHeaderTouchForScroll="false"
+        app:chl_interceptHeaderTouchForScroll="true"
+        app:chl_firstPositionOffset="-50dp"
         >
         <!-- First view is the header -->
         <ImageView
@@ -25,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:layout_below="@id/a_collapsing_header_layout_iv_header_image"
             />
 
     </com.minoon.weasel.layout.CollapsingHeaderLayout>
