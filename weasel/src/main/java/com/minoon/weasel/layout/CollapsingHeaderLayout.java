@@ -127,6 +127,10 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         mRecyclerView = getFirstRecyclerView(mDragView);
         mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerView);
         setupWeasel();
+        // check the drag view height is correct value. TODO this should be lighter because it is heavy process.
+        if (mDragView.getMeasuredHeight() != mDragView.getHeight()) {
+            mDragView.requestLayout();
+        }
     }
 
     /*
@@ -375,15 +379,12 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
 
     @Override
     public void scrollViewBy(int dx, int dy) {
-        if(mTouchEventTrader.stealTouchEventForChild()) {
-            mTouchEventTrader.scrollBy(dx, -dy);
-            mContentScrollPosition -= dy;
-        } else if(isAtTop()) {
-            if(dy > 0) {
-                scrollDragViewTo(getScrollPositionY() + dy);
-            } else {
+        if (isAtTop()) {
+            if (mTouchEventTrader.stealTouchEventForChild() || dy < 0) {
                 mTouchEventTrader.scrollBy(dx, -dy);
                 mContentScrollPosition -= dy;
+            } else {
+                scrollDragViewTo(getScrollPositionY() + dy);
             }
         } else if (hasMoreContent(mRecyclerView)){
             // move drag view if recycler view has more content. TODO consider not RecyclerView
