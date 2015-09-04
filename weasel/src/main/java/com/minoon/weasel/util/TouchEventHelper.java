@@ -96,13 +96,13 @@ public class TouchEventHelper {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(ev);
+        boolean dispatchForChild = true;
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mLastMotionX = mInitialMotionX = ev.getX();
                 mLastMotionY = mInitialMotionY = ev.getY();
                 mActivePointerId = ev.getPointerId(0);
-                mCallback.dispathcTouchEventForChild(ev);
                 break;
             case MotionEvent.ACTION_MOVE:
                 final int pointerIndex = ev.findPointerIndex(mActivePointerId);
@@ -125,9 +125,11 @@ public class TouchEventHelper {
                 if(mIsBeingDragged) {
                     // ドラッグ処理
                     mCallback.scrollViewBy((int)(x - mLastMotionX), (int)(y - mLastMotionY));
-                    mCallback.dispathcTouchEventForChild(cloneMotionEventWithAction(ev, MotionEvent.ACTION_CANCEL));
                     mLastMotionX = x;
                     mLastMotionY = y;
+                    // 子Viewのイベントをキャンセル
+                    mCallback.dispathcTouchEventForChild(cloneMotionEventWithAction(ev, MotionEvent.ACTION_CANCEL));
+                    dispatchForChild = false;
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -138,8 +140,6 @@ public class TouchEventHelper {
                     int initialVelocityY = (int) velocityTracker.getYVelocity(mActivePointerId);
                     mCallback.onViewReleased(initialVelocityX, initialVelocityY);
                     endDrag();
-                } else {
-                    mCallback.dispathcTouchEventForChild(ev);
                 }
                 cancel();
                 break;
@@ -153,6 +153,9 @@ public class TouchEventHelper {
             case MotionEvent.ACTION_CANCEL:
                 cancel();
                 break;
+        }
+        if (dispatchForChild) {
+            mCallback.dispathcTouchEventForChild(ev);
         }
     }
 

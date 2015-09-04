@@ -12,13 +12,28 @@
         app:chl_alpha="0"
         app:chl_scrollMultiplier="0.4"
         app:chl_interceptHeaderTouchForScroll="true"
-        app:chl_firstPositionOffset="-50dp"
         >
         <!-- First view is the header -->
-        <ImageView
-            android:id="@+id/a_collapsing_header_layout_iv_header_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/a_collapsing_header_layout_iv_header_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_margin="40dp"
+                android:text="Button"
+                android:layout_below="@id/a_collapsing_header_layout_iv_header_image"
+                />
+
+        </RelativeLayout>
 
         <!-- Second view is the scroll view -->
         <android.support.v7.widget.RecyclerView

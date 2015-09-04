@@ -206,6 +206,11 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
                 event.getY() - getScrollPositionY(), event.getMetaState());
     }
 
+    private MotionEvent cloneMotionEventWithFixPositionForHeader(MotionEvent event) {
+        return mHeaderView == null ? event : MotionEvent.obtain(event.getDownTime(), event.getEventTime(), event.getAction(), event.getX() - mHeaderView.getTranslationX(),
+                event.getY() - mHeaderView.getTranslationY(), event.getMetaState());
+    }
+
     /**
      * Calculate if one position is above any view.
      *
@@ -364,7 +369,7 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         if (isViewHit(mDragView, (int)ev.getX(), (int)ev.getY())) {
             mDragView.dispatchTouchEvent(cloneEv);
         } else if (isViewHit(mHeaderView, (int)ev.getX(), (int)ev.getY())) {
-            mHeaderView.dispatchTouchEvent(cloneEv);
+            Logger.i(TAG, "dispatchTouchEvent. '%s'", mHeaderView.dispatchTouchEvent(cloneMotionEventWithFixPositionForHeader(ev)));
         }
     }
 
