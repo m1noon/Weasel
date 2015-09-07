@@ -128,7 +128,7 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
         mTouchEventTrader = new LinearLayoutRecyclerViewTrader(mRecyclerView);
         setupWeasel();
         // check the drag view height is correct value. TODO this should be lighter because it is heavy process.
-        if (mDragView.getMeasuredHeight() != mDragView.getHeight()) {
+        if (mDragView.getMeasuredHeight() != mDragView.getHeight() && mDragView.getBottom() < getBottom()) {
             mDragView.requestLayout();
         }
     }
@@ -250,9 +250,6 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
                 mScrollerOldY = mScroller.getStartY();
                 mScrollerOldX = mScroller.getStartX();
             }
-            int oldX = getScrollPositionX();
-            int oldY = getScrollPositionY();
-            int x = mScroller.getCurrX();
             int y = mScroller.getCurrY();
             final int dy = y - mScrollerOldY;
             // 縦方向
@@ -386,7 +383,7 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
             } else {
                 scrollDragViewTo(getScrollPositionY() + dy);
             }
-        } else if (hasMoreContent(mRecyclerView)){
+        } else if (hasMoreContent(mRecyclerView) || dy > 0){
             // move drag view if recycler view has more content. TODO consider not RecyclerView
             mContentScrollPosition = 0;
             scrollDragViewTo(getScrollPositionY() + dy);
@@ -513,9 +510,13 @@ public class CollapsingHeaderLayout extends FrameLayout implements TouchEventHel
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         StreamPlayerViewSavedState ss = new StreamPlayerViewSavedState(superState);
-        ss.dragViewPosition = mDragView.getTop();
-        ss.headerAlpha = mHeaderView.getAlpha();
-        ss.headerTranslationY = mHeaderView.getTranslationY();
+        if (mDragView != null) {
+            ss.dragViewPosition = mDragView.getTop();
+        }
+        if (mHeaderView != null) {
+            ss.headerAlpha = mHeaderView.getAlpha();
+            ss.headerTranslationY = mHeaderView.getTranslationY();
+        }
         ss.contentScrollPosition = mContentScrollPosition;
         return ss;
     }
